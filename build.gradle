@@ -1,0 +1,48 @@
+buildscript {
+  repositories {
+    jcenter()
+    mavenLocal()
+  }
+  dependencies {
+    classpath 'org.standardout:gradle-eclipseconfig:1.0.0-SNAPSHOT'
+  }
+}
+
+// Apply the groovy plugin to add support for Groovy
+apply plugin: 'groovy'
+apply plugin: 'maven-publish'
+apply plugin: 'org.standardout.eclipseconfig' // applies 'eclipse' plugin automatically
+
+group = 'org.standardout'
+version = '1.0.0-SNAPSHOT'
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+repositories {
+  jcenter()
+  mavenLocal()
+}
+
+dependencies {
+  compile gradleApi()
+  compile localGroovy()
+
+  // FIXME right now not available on Maven Central
+  // see https://github.com/editorconfig/editorconfig-core-java/issues/6
+  compile 'org.editorconfig:editorconfig-core:0.12.1.Final-SNAPSHOT'
+
+  testCompile 'junit:junit:4.12'
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      from components.java
+    }
+  }
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '3.0'
+}
