@@ -4,10 +4,50 @@ gradle-eclipseconfig
 Simple plugin for configuring basic editor settings for your Gradle generated Eclipse project based on EditorConfig.
 It builds on the [Gradle Eclipse plugin](https://docs.gradle.org/current/userguide/eclipse_plugin.html) and adapts the settings of the project generated with `gradle eclipse`.
 
+
 Usage
 -----
 
-**TODO:** This section will be added once the first version has been published.
+**The plugin is still pending the approval to be included in the Gradle plugins repository. But this will hopefully soon be the case and then it will be accessible as stated below.**
+
+### Gradle 2.1 and higher
+
+```groovy
+plugins {
+  id "org.standardout.eclipseconfig" version "1.0.0"
+}
+```
+
+### Gradle 1.x and 2.0
+
+```groovy
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath 'org.standardout:gradle-eclipseconfig:1.0.0'
+  }
+}
+
+apply plugin: 'apply plugin: 'org.standardout.eclipseconfig'
+```
+
+For configuring the plugin you should use an `.editorconfig` file. See the following sections for more information and configuration options apart from [EditorConfig](http://editorconfig.org/).
+
+Here is a small example on how the `.editorconfig` might look like:
+
+```
+root = true
+
+[*]
+charset = utf-8
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+```
 
 
 Configuration

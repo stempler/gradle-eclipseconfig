@@ -1,16 +1,21 @@
 buildscript {
   repositories {
     jcenter()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
     mavenLocal()
   }
   dependencies {
-    classpath 'org.standardout:gradle-eclipseconfig:1.0.0-SNAPSHOT'
+    classpath 'org.standardout:gradle-eclipseconfig:1.0.0'
+    classpath "com.gradle.publish:plugin-publish-plugin:0.9.5"
   }
 }
 
 // Apply the groovy plugin to add support for Groovy
 apply plugin: 'groovy'
 apply plugin: 'maven-publish'
+apply plugin: "com.gradle.plugin-publish"
 apply plugin: 'org.standardout.eclipseconfig' // applies 'eclipse' plugin automatically
 
 eclipseconfig {
@@ -22,7 +27,7 @@ eclipseconfig {
 }
 
 group = 'org.standardout'
-version = '1.0.0-SNAPSHOT'
+version = '1.0.0'
 
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
@@ -49,6 +54,25 @@ publishing {
     mavenJava(MavenPublication) {
       from components.java
     }
+  }
+}
+
+pluginBundle {
+  website = 'https://github.com/stempler/gradle-eclipseconfig'
+  vcsUrl = 'https://github.com/stempler/gradle-eclipseconfig'
+  description = 'Plugin for configuring basic editor settings for your Gradle generated Eclipse project, based on EditorConfig plus a couple of Eclipse specific settings like code templates.'
+  tags = ['eclipse', 'editorconfig']
+
+  plugins {
+    eclipseconfigPlugin {
+      id = 'org.standardout.eclipseconfig'
+      displayName = 'Gradle Eclipse project configuration plugin'
+    }
+  }
+
+  mavenCoordinates {
+    groupId = 'org.standardout'
+    artifactId = 'gradle-eclipseconfig'
   }
 }
 
