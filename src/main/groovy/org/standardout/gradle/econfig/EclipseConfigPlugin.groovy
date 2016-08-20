@@ -89,6 +89,26 @@ class EclipseConfigPlugin implements Plugin<Project> {
         properties['org.eclipse.jdt.ui.text.custom_code_templates'] = codeTemplates
       }
 
+      boolean saveActions = false
+
+      // trailing whitespace
+      if (settings['trim_trailing_whitespace']) {
+        if ('true' == settings['trim_trailing_whitespace']) {
+          saveActions = true // need save actions enabled
+          properties['sp_cleanup.remove_trailing_whitespaces'] = 'true'
+          properties['sp_cleanup.remove_trailing_whitespaces_all'] = 'true'
+          properties['sp_cleanup.remove_trailing_whitespaces_ignore_empty'] = 'false'
+        }
+        else {
+          properties['sp_cleanup.remove_trailing_whitespaces'] = 'false'
+        }
+      }
+
+      // enable save actions if needed (otherwise leave as-is)
+      if (saveActions) {
+        properties['editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup'] = 'true'
+      }
+
       Util.mergeProperties(jdtUIPrefs, properties)
     }
   }

@@ -32,15 +32,17 @@ The main differences of the two are:
 - `indent_style` (Java/JDT)
 - `indent_size` (Java/JDT)
 - `tab_width` (Java/JDT)
+- `trim_trailing_whitespace` (Java/JDT)
 
 ##### Planned
 
-- `trim_trailing_whitespace`
 - `charset`
 
 #### Limitations
 
 *gradle-eclipseconfig* works a bit diferently than the usual EditorConfig plugin. As it adapts the project settings, it can't provide individual settings for files being opened. Instead it applies a general configuration on the whole project.
+
+The project settings that are set right now are related to the Eclipse JDT (Java Development Tools) - so the settings apply to developing with Java, but apply for instance also for the *Groovy Eclipse* plugin.
 
 
 ### Code templates
