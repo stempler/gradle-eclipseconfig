@@ -33,10 +33,8 @@ The main differences of the two are:
 - `indent_size` (Java/JDT)
 - `tab_width` (Java/JDT)
 - `trim_trailing_whitespace` (Java/JDT)
-
-##### Planned
-
 - `charset`
+- `end_of_line`
 
 #### Limitations
 

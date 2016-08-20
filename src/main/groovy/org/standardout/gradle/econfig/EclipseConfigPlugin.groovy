@@ -31,6 +31,7 @@ class EclipseConfigPlugin implements Plugin<Project> {
 
     EditorConfig editorConfig = new EditorConfig()
 
+    applyCommonConfiguration(project, editorConfig)
     applyJavaConfiguration(project, editorConfig)
   }
 
@@ -122,6 +123,93 @@ class EclipseConfigPlugin implements Plugin<Project> {
       properties.putAll(project.eclipseconfig.jdtUIProperties)
 
       Util.mergeProperties(jdtUIPrefs, properties)
+    }
+  }
+
+  void applyCommonConfiguration(Project project, EditorConfig editorConfig) {
+    File dummyFile = project.file('Dummy.java')
+
+    def settings = toMap(editorConfig.getProperties(dummyFile.absolutePath))
+
+    // remove properties on clean
+    project.tasks.cleanEclipse.doLast {
+      project.delete("${project.projectDir}/.settings/org.eclipse.core.resources.prefs")
+      project.delete("${project.projectDir}/.settings/org.eclipse.core.runtime.prefs")
+    }
+
+    // apply resources settings
+    project.tasks.eclipse.doLast {
+      File prefs = project.file("${project.projectDir}/.settings/org.eclipse.core.resources.prefs")
+
+      Map properties = new LinkedHashMap()
+      if (!prefs.exists()) {
+        properties['eclipse.preferences.version'] = '1'
+      }
+
+      // charset
+      if (settings['charset']) {
+        def charset
+        // translate charset setting
+        switch (settings['charset']) {
+        case 'latin1':
+          charset = 'ISO-8859-1'
+          break
+        case 'utf-8':
+          charset = 'UTF-8'
+          break
+        case 'utf-16be':
+          charset = 'UTF-16BE'
+          break
+        case 'utf-16le':
+          charset = 'UTF-16LE'
+          break
+        }
+
+        if (charset) {
+          properties['encoding/<project>'] = charset
+        }
+        else {
+          project.logger.error("Unsupported charset ${settings['charset']}")
+        }
+      }
+
+      Util.mergeProperties(prefs, properties)
+    }
+
+    // apply runtime settings
+    project.tasks.eclipse.doLast {
+      File prefs = project.file("${project.projectDir}/.settings/org.eclipse.core.runtime.prefs")
+
+      Map properties = new LinkedHashMap()
+      if (!prefs.exists()) {
+        properties['eclipse.preferences.version'] = '1'
+      }
+
+      // line ending
+      if (settings['end_of_line']) {
+        def lineEnding
+        // translate line ending setting
+        switch (settings['end_of_line']) {
+        case 'lf':
+          lineEnding = '\\n'
+          break
+        case 'crlf':
+          lineEnding = '\\r\\n'
+          break
+        case 'cr':
+          lineEnding = '\\r'
+          break
+        }
+
+        if (lineEnding) {
+          properties['line.separator'] = lineEnding
+        }
+        else {
+          project.logger.error("Unsupported line ending ${settings['end_of_line']}")
+        }
+      }
+
+      Util.mergeProperties(prefs, properties)
     }
   }
 }
