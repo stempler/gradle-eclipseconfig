@@ -5,11 +5,13 @@ buildscript {
   }
   dependencies {
     classpath 'org.standardout:gradle-eclipseconfig:1.0.0-SNAPSHOT'
+    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
   }
 }
 
 // Apply the groovy plugin to add support for Groovy
 apply plugin: 'groovy'
+apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'maven-publish'
 apply plugin: 'org.standardout.eclipseconfig' // applies 'eclipse' plugin automatically
 
@@ -29,16 +31,26 @@ targetCompatibility = '1.6'
 
 repositories {
   jcenter()
-  mavenLocal()
+}
+
+configurations {
+  editorconfig
+  compile.extendsFrom(editorconfig)
+}
+
+shadowJar {
+  configurations = [project.configurations.editorconfig]
+  relocate 'org.editorconfig', 'org.standardout.gradle.econfig.shaded.org.editorconfig'
 }
 
 dependencies {
   compile gradleApi()
   compile localGroovy()
 
-  // FIXME right now not available on Maven Central
+  // using pre-built version of editorconfig-core
   // see https://github.com/editorconfig/editorconfig-core-java/issues/6
-  compile 'org.editorconfig:editorconfig-core:0.12.1.Final-SNAPSHOT'
+  // compile 'org.editorconfig:editorconfig-core:0.12.1.Final-SNAPSHOT'
+  editorconfig files('lib/editorconfig-core-0.12.1.Final-SNAPSHOT.jar')
 
   testCompile 'junit:junit:4.12'
 }
@@ -46,7 +58,10 @@ dependencies {
 publishing {
   publications {
     mavenJava(MavenPublication) {
-      from components.java
+      // from components.shadow
+      artifact shadowJar {
+        classifier ''
+      }
     }
   }
 }
