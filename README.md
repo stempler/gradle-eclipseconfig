@@ -52,3 +52,47 @@ Eclipse projects allow to configure code templates. If you provide a `codetempla
 The easiest way to create such a file is by exporting it from Eclipse. You can do so either in the workspace settings or the settings of a project (*Java Code Style*/*Code Templates*).
 
 If you are having problems with the code templates not being applied, check if your templates are marked as enabled (`enabled="true"`) and are *not* marked deleted (should be `deleted="false"`).
+
+
+### Custom settings
+
+Eclipse project configuration is done via a couple of XML and Properties files.
+In addition to the predefined configuration options you can also configure properties on your own.
+
+To learn what kind of properties you can set, the easiest approach is usually to change the project settings in Eclipse via the UI, and then inspect the configuration files.
+
+#### JDT UI properties
+
+You can configure JDT UI properties that are not directly supported by *gradle-eclipseconfig*, by specifying them explicitly like this:
+
+```groovy
+eclipseconfig {
+  jdtUI { properties ->
+    // set properties for the file org.eclipse.jdt.ui.prefs
+
+    // make private fields final on save, if possible
+    properties.'sp_cleanup.make_variable_declarations_final' = true
+    properties.'sp_cleanup.make_private_fields_final' = true
+  }
+}
+```
+
+In the JDT UI settings for instance the Eclipse Editor save actions are configured.
+So if you want to do more than just removing trailing white space on save, you can add the respective properties here.
+
+#### JDT Core properties
+
+The Gradle Eclipse plugin already offers the possibility to adapt the JDT properties, for example:
+
+```groovy
+eclipse {
+  jdt {
+    file {
+      withProperties { properties ->
+        // set properties for the file org.eclipse.jdt.core.prefs
+        properties['org.eclipse.jdt.core.compiler.debug.lineNumber'] = 'generate'
+      }
+    }
+  }
+}
+```

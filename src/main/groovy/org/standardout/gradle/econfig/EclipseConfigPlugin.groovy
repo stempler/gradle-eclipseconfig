@@ -21,9 +21,13 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 class EclipseConfigPlugin implements Plugin<Project> {
+
   void apply(Project project) {
     // ensure eclipse plugin is applied
     project.apply(plugin: 'eclipse')
+
+    // register extension
+    project.extensions.create('eclipseconfig', EclipseConfigExtension, project)
 
     EditorConfig editorConfig = new EditorConfig()
 
@@ -90,11 +94,13 @@ class EclipseConfigPlugin implements Plugin<Project> {
       }
 
       boolean saveActions = false
+      boolean saveAdditionalActions = false
 
       // trailing whitespace
       if (settings['trim_trailing_whitespace']) {
         if ('true' == settings['trim_trailing_whitespace']) {
           saveActions = true // need save actions enabled
+          saveAdditionalActions = true
           properties['sp_cleanup.remove_trailing_whitespaces'] = 'true'
           properties['sp_cleanup.remove_trailing_whitespaces_all'] = 'true'
           properties['sp_cleanup.remove_trailing_whitespaces_ignore_empty'] = 'false'
@@ -108,6 +114,12 @@ class EclipseConfigPlugin implements Plugin<Project> {
       if (saveActions) {
         properties['editor_save_participant_org.eclipse.jdt.ui.postsavelistener.cleanup'] = 'true'
       }
+      if (saveAdditionalActions) {
+        properties['sp_cleanup.on_save_use_additional_actions'] = 'true'
+      }
+
+      // add custom properties (may override determined settings)
+      properties.putAll(project.eclipseconfig.jdtUIProperties)
 
       Util.mergeProperties(jdtUIPrefs, properties)
     }

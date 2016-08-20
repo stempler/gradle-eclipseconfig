@@ -13,6 +13,14 @@ apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 apply plugin: 'org.standardout.eclipseconfig' // applies 'eclipse' plugin automatically
 
+eclipseconfig {
+  jdtUI { properties ->
+    // make private fields final on save, if possible
+    properties.'sp_cleanup.make_variable_declarations_final' = true
+    properties.'sp_cleanup.make_private_fields_final' = true
+  }
+}
+
 group = 'org.standardout'
 version = '1.0.0-SNAPSHOT'
 
