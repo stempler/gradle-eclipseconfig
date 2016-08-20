@@ -62,5 +62,34 @@ class EclipseConfigPlugin implements Plugin<Project> {
         }
       }
     }
+
+    // JDT UI properties
+
+    // remove properties on clean
+    project.tasks.cleanEclipse.doLast {
+      project.delete("${project.projectDir}/.settings/org.eclipse.jdt.ui.prefs")
+    }
+
+    // apply JDT UI settings
+    project.tasks.eclipse.doLast {
+      File jdtUIPrefs = project.file("${project.projectDir}/.settings/org.eclipse.jdt.ui.prefs")
+
+      Map properties = new LinkedHashMap()
+      if (!jdtUIPrefs.exists()) {
+        properties['eclipse.preferences.version'] = '1'
+      }
+
+      // code templates
+      File codeTemplatesFile = project.file('codetemplates.xml')
+      if (codeTemplatesFile.exists()) {
+        def codeTemplates = codeTemplatesFile.text.replace('\n', '\\n').replace('\r', '').replaceAll(/=/, '\\\\=')
+        // Enable using comment templates by default
+        properties['org.eclipse.jdt.ui.javadoc'] = 'true'
+        // Custom templates
+        properties['org.eclipse.jdt.ui.text.custom_code_templates'] = codeTemplates
+      }
+
+      Util.mergeProperties(jdtUIPrefs, properties)
+    }
   }
 }
