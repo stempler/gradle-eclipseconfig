@@ -4,7 +4,7 @@ buildscript {
     maven {
       url "https://plugins.gradle.org/m2/"
     }
-    mavenLocal()
+    // mavenLocal()
   }
   dependencies {
     classpath 'org.standardout:gradle-eclipseconfig:1.0.0'
@@ -14,8 +14,9 @@ buildscript {
 
 // Apply the groovy plugin to add support for Groovy
 apply plugin: 'groovy'
-apply plugin: 'maven-publish'
-apply plugin: "com.gradle.plugin-publish"
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'org.standardout.eclipseconfig' // applies 'eclipse' plugin automatically
 
 eclipseconfig {
@@ -49,13 +50,108 @@ dependencies {
   testCompile 'junit:junit:4.12'
 }
 
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      from components.java
+// package groovydoc into a jar file
+task packageJavadoc(type: Jar, dependsOn: 'groovydoc') {
+  from groovydoc.destinationDir
+  classifier = 'javadoc'
+}
+
+// package source into a jar file
+task packageSources(type: Jar) {
+  from sourceSets.main.allSource
+  classifier = 'sources'
+}
+
+// define artifacts for upload
+artifacts {
+  archives jar
+  archives packageJavadoc
+  archives packageSources
+}
+
+def configurePom(def pom) {
+  // ensure correct artifact ID
+  pom.artifactId = 'gradle-eclipseconfig'
+
+  // pom file details
+  pom.project {
+     name 'gradle-eclipseconfig'
+     packaging 'jar'
+     description 'Gradle plugin for configuring basic editor settings for your Gradle generated Eclipse project, based on EditorConfig plus a couple of Eclipse specific settings like code templates.'
+     url 'https://github.com/stempler/gradle-eclipseconfig'
+
+     scm {
+       url 'scm:git:https://github.com/stempler/gradle-eclipseconfig.git'
+       connection 'scm:git:https://github.com/stempler/gradle-eclipseconfig.git'
+       developerConnection 'scm:git:https://github.com/stempler/gradle-eclipseconfig.git'
+     }
+
+     licenses {
+       license {
+         name 'The Apache Software License, Version 2.0'
+         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+         distribution 'repo'
+       }
+     }
+
+     developers {
+       developer {
+         id 'stempler'
+         name 'Simon Templer'
+         email 'simon@templer.cc'
+       }
+     }
+   }
+}
+
+install {
+  repositories.mavenInstaller {
+    // ensure correct artifact ID when installing locally
+    configurePom(pom)
+  }
+}
+
+// sign all artifacts
+signing {
+  required {
+    // NOTE: skipping does only work if no gradle properties specifying the key are present
+    gradle.taskGraph.hasTask('uploadArchives')
+  }
+  sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      // sign artifacts before upload
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      // upload to sonatype OSS (snapshot/release)
+      repository(url: this.version.endsWith('-SNAPSHOT') ?
+          'https://oss.sonatype.org/content/repositories/snapshots' :
+          'https://oss.sonatype.org/service/local/staging/deploy/maven2') {
+        authentication(userName: this.hasProperty('sonatypeUsername') ? sonatypeUsername : '',
+          password: this.hasProperty('sonatypePassword') ? sonatypePassword : '')
+      }
+
+      configurePom(pom)
     }
   }
 }
+
+// groovydoc task work-around
+
+configurations {
+  jansi.extendsFrom(runtime)
+}
+groovydoc {
+  groovyClasspath = project.configurations.jansi
+}
+dependencies {
+  jansi 'org.fusesource.jansi:jansi:1.11'
+}
+
+// Gradle plugin publishing
 
 pluginBundle {
   website = 'https://github.com/stempler/gradle-eclipseconfig'

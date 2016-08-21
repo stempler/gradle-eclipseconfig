@@ -8,9 +8,9 @@ It builds on the [Gradle Eclipse plugin](https://docs.gradle.org/current/usergui
 Usage
 -----
 
-**The plugin is still pending the approval to be included in the Gradle plugins repository. But this will hopefully soon be the case and then it will be accessible as stated below.**
-
 ### Gradle 2.1 and higher
+
+**The plugin is still pending the approval to be included in the Gradle plugins repository - if the method below does not work, use the approach for Gradle 1.x/2.0.**
 
 ```groovy
 plugins {
@@ -23,9 +23,7 @@ plugins {
 ```groovy
 buildscript {
   repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
+    jcenter()
   }
   dependencies {
     classpath 'org.standardout:gradle-eclipseconfig:1.0.0'
@@ -47,6 +45,18 @@ charset = utf-8
 trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
+```
+
+To generate the Eclipse project use the `eclipse` task of the Gradle Eclipse plugin:
+
+```
+gradle eclipse
+```
+
+If you want to make sure that the project contains only the generated content and settings, also run `cleanEclipse`:
+
+```
+gradle cleanEclipse eclipse
 ```
 
 
