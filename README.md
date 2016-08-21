@@ -30,7 +30,7 @@ buildscript {
   }
 }
 
-apply plugin: 'apply plugin: 'org.standardout.eclipseconfig'
+apply plugin: 'org.standardout.eclipseconfig'
 ```
 
 ### Getting started
