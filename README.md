@@ -10,7 +10,7 @@ Usage
 
 ### Gradle 2.1 and higher
 
-**The plugin is still pending the approval to be included in the Gradle plugins repository - if the method below does not work, use the approach for Gradle 1.x/2.0.**
+**The plugin is still pending the approval to be included in the Gradle plugins repository - if the method below does not work, use the approach compatible with all Gradle versions.**
 
 ```groovy
 plugins {
@@ -18,7 +18,7 @@ plugins {
 }
 ```
 
-### Gradle 1.x and 2.0
+### All Gradle versions
 
 ```groovy
 buildscript {
@@ -32,6 +32,8 @@ buildscript {
 
 apply plugin: 'apply plugin: 'org.standardout.eclipseconfig'
 ```
+
+### Getting started
 
 For configuring the plugin you should use an `.editorconfig` file. See the following sections for more information and configuration options apart from [EditorConfig](http://editorconfig.org/).
 
