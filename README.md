@@ -33,7 +33,7 @@ buildscript {
 apply plugin: 'org.standardout.eclipseconfig'
 ```
 
-Applying the *eclipseconfig* plugin will implicitly also apply the Gradle built-in *eclipse* plugin (if it is not applied yet), as *eclipseconfig* extends it's tasks.
+Applying the *eclipseconfig* plugin will implicitly also apply the Gradle built-in *eclipse* plugin (if it is not applied yet), as *eclipseconfig* extends its tasks.
 
 ### Getting started
 
@@ -69,7 +69,7 @@ Configuration
 
 ### EditorConfig
 
-Settings for editors are defined using an `.editorconfig` file. See the [EditorConfig website](http://editorconfig.org/) for more information. EditorConfig allows configuring indentation, trailing whitespace, line endings, encoding and other properties for the files to be edited.
+Settings for editors are defined using an `.editorconfig` file. See the [EditorConfig website](http://editorconfig.org/) for more information. EditorConfig allows for configuring indentation, trailing whitespace, line endings, encoding and other properties for the files to be edited.
 A subset of these configuration options is supported by *gradle-eclipseconfig*.
 
 Using this configuration format you can easily apply the settings for editing your project files to other editors.
@@ -99,9 +99,9 @@ The project settings that are set right now are related to the Eclipse JDT (Java
 
 ### Code templates
 
-Eclipse projects allow to configure code templates. If you provide a `codetemplates.xml` file in your project directory, *gradle-eclipseconfig* will pick it up and use it to configure the Eclipse project with your code templates.
+Eclipse projects allow code templates to be configured. If you provide a `codetemplates.xml` file in your project directory, *gradle-eclipseconfig* will pick it up and use it to configure the Eclipse project with your code templates.
 
-The easiest way to create such a file is by exporting it from Eclipse. You can do so either in the workspace settings or the settings of a project (*Java Code Style*/*Code Templates*).
+The easiest way to create such a file is by exporting it from Eclipse. You can do so either in the workspace settings or in the settings of a project (*Java Code Style*/*Code Templates*).
 
 If you are having problems with the code templates not being applied, check if your templates are marked as enabled (`enabled="true"`) and are *not* marked deleted (should be `deleted="false"`).
 
