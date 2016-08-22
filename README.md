@@ -10,8 +10,6 @@ Usage
 
 ### Gradle 2.1 and higher
 
-**The plugin is still pending the approval to be included in the Gradle plugins repository - if the method below does not work, use the approach compatible with all Gradle versions.**
-
 ```groovy
 plugins {
   id "org.standardout.eclipseconfig" version "1.0.0"
