@@ -10,6 +10,8 @@ Usage
 
 ### Gradle 2.1 and higher
 
+***There seems to be some trouble right now when that makes the plugin configuration fail when using this notation. Please use the notation for all Gradle versions if you experience any problems with this one.***
+
 ```groovy
 plugins {
   id "org.standardout.eclipseconfig" version "1.0.0"
@@ -30,6 +32,8 @@ buildscript {
 
 apply plugin: 'org.standardout.eclipseconfig'
 ```
+
+Applying the *eclipseconfig* plugin will implicitly also apply the Gradle built-in *eclipse* plugin (if it is not applied yet), as *eclipseconfig* extends it's tasks.
 
 ### Getting started
 
