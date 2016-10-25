@@ -85,7 +85,7 @@ class EclipseConfigPlugin implements Plugin<Project> {
       }
 
       // code templates
-      File codeTemplatesFile = project.file('codetemplates.xml')
+      File codeTemplatesFile = project.eclipseconfig.codeTemplates as File
       if (codeTemplatesFile.exists()) {
         def codeTemplates = codeTemplatesFile.text.replace('\n', '\\n').replace('\r', '').replaceAll(/=/, '\\\\=')
         // Enable using comment templates by default

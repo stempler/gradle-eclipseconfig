@@ -105,6 +105,14 @@ The easiest way to create such a file is by exporting it from Eclipse. You can d
 
 If you are having problems with the code templates not being applied, check if your templates are marked as enabled (`enabled="true"`) and are *not* marked deleted (should be `deleted="false"`).
 
+You can also use code templates from a custom location. This allows you for instance to use a single template in a multi-project setup. Tell *gradle-eclipseconfig* where to locate the file, for example like this:
+
+```groovy
+eclipseconfig {
+  codeTemplates = rootProject.file('codetemplates.xml')
+}
+```
+
 
 ### Custom settings
 

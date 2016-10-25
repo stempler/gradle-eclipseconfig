@@ -40,6 +40,11 @@ class EclipseConfigExtension {
     cl(jdtUIProperties)
   }
 
+  /**
+   * Location of Eclipse code templates file.
+   */
+  def codeTemplates = project.file('codetemplates.xml')
+
   // internal
 
   private final Project project
