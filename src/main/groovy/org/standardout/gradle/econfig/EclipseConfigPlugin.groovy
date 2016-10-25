@@ -49,12 +49,12 @@ class EclipseConfigPlugin implements Plugin<Project> {
     def settings = toMap(editorConfig.getProperties(dummyFile.absolutePath))
 
     // JDT properties
+    /* Use of eclipse plugin DSL leads to errors when plugin is used via new plugin mechanism
     project.eclipse {
       jdt {
         file {
           withProperties { properties ->
             if (settings['indent_style']) {
-              //TODO verify if both tab and space are correct settings here
               properties['org.eclipse.jdt.core.formatter.tabulation.char'] = settings['indent_style']
             }
             if (settings['indent_size']) {
@@ -67,6 +67,34 @@ class EclipseConfigPlugin implements Plugin<Project> {
         }
       }
     }
+    */
+    // alternatively adapt the file on our own
+    project.tasks.eclipse.doLast {
+      File jdtPrefs = project.file("${project.projectDir}/.settings/org.eclipse.jdt.core.prefs")
+
+      Map properties = new LinkedHashMap()
+      if (!jdtPrefs.exists()) {
+        properties['eclipse.preferences.version'] = '1'
+      }
+
+      // indentation
+      if (settings['indent_style']) {
+        properties['org.eclipse.jdt.core.formatter.tabulation.char'] = settings['indent_style']
+      }
+      if (settings['indent_size']) {
+        properties['org.eclipse.jdt.core.formatter.indentation.size'] = settings['indent_size']
+      }
+      if (settings['tab_width'] || settings['indent_size']) {
+        properties['org.eclipse.jdt.core.formatter.tabulation.size'] = settings['tab_width'] ?: settings['indent_size']
+      }
+
+      // add custom properties (may override determined settings)
+      //XXX add this also for JDT core properties?
+      // properties.putAll(project.eclipseconfig.jdtProperties)
+
+      Util.mergeProperties(jdtPrefs, properties)
+    }
+
 
     // JDT UI properties
 
