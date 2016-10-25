@@ -7,8 +7,8 @@ buildscript {
     // mavenLocal()
   }
   dependencies {
-    classpath 'org.standardout:gradle-eclipseconfig:1.0.0'
-    classpath "com.gradle.publish:plugin-publish-plugin:0.9.5"
+    classpath 'org.standardout:gradle-eclipseconfig:1.1.0'
+    classpath "com.gradle.publish:plugin-publish-plugin:0.9.6"
   }
 }
 
@@ -20,6 +20,8 @@ apply plugin: 'com.gradle.plugin-publish'
 apply plugin: 'org.standardout.eclipseconfig' // applies 'eclipse' plugin automatically
 
 eclipseconfig {
+  // codeTemplates = rootProject.file('codetemplates.xml')
+  
   jdtUI { properties ->
     // make private fields final on save, if possible
     properties.'sp_cleanup.make_variable_declarations_final' = true
@@ -28,7 +30,7 @@ eclipseconfig {
 }
 
 group = 'org.standardout'
-version = '1.1.0'
+version = '1.2.0-SNAPSHOT'
 
 sourceCompatibility = '1.6'
 targetCompatibility = '1.6'
