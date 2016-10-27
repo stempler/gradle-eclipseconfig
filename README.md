@@ -10,8 +10,6 @@ Usage
 
 ### Gradle 2.1 and higher
 
-***There seems to be some trouble right now when that makes the plugin configuration fail when using this notation. Please use the notation for all Gradle versions if you experience any problems with this one.***
-
 ```groovy
 plugins {
   id "org.standardout.eclipseconfig" version "1.1.0"
