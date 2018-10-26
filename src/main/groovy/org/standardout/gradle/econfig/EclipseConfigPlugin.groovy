@@ -43,10 +43,19 @@ class EclipseConfigPlugin implements Plugin<Project> {
     result
   }
 
-  void applyJavaConfiguration(Project project, EditorConfig editorConfig) {
-    File dummyFile = project.file('Dummy.java')
+  private Map getDummyFileProps(Project project, EditorConfig editorConfig) {
+    File   dummyFile    = project.file('Dummy.java')
+    String dummyFileStr = dummyFile.absolutePath.replaceAll("\\\\", "/")
+    Map    settings     = toMap(editorConfig.getProperties(dummyFileStr))
 
-    def settings = toMap(editorConfig.getProperties(dummyFile.absolutePath))
+    project.logger.debug(".editorconfig read for: ${dummyFile} -> ${dummyFileStr}")
+    project.logger.debug(".editorconfig contents: ${settings}")
+
+    settings
+  }
+
+  void applyJavaConfiguration(Project project, EditorConfig editorConfig) {
+    def settings = getDummyFileProps(project, editorConfig)
 
     // JDT properties
     /* Use of eclipse plugin DSL leads to errors when plugin is used via new plugin mechanism
@@ -155,9 +164,7 @@ class EclipseConfigPlugin implements Plugin<Project> {
   }
 
   void applyCommonConfiguration(Project project, EditorConfig editorConfig) {
-    File dummyFile = project.file('Dummy.java')
-
-    def settings = toMap(editorConfig.getProperties(dummyFile.absolutePath))
+    def settings = getDummyFileProps(project, editorConfig)
 
     // remove properties on clean
     project.tasks.cleanEclipse.doLast {
