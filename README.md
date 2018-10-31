@@ -12,7 +12,7 @@ Usage
 
 ```groovy
 plugins {
-  id "org.standardout.eclipseconfig" version "1.1.0"
+  id "org.standardout.eclipseconfig" version "1.1.1"
 }
 ```
 
@@ -24,7 +24,7 @@ buildscript {
     jcenter()
   }
   dependencies {
-    classpath 'org.standardout:gradle-eclipseconfig:1.1.0'
+    classpath 'org.standardout:gradle-eclipseconfig:1.1.1'
   }
 }
 
